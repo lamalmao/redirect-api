@@ -1,0 +1,17 @@
+{
+  "host": {
+    "hostname": "127.0.0.1",
+    "port": {
+      "dev": 80,
+      "prod": 443
+    },
+    "credentials": {
+      "certificate": "crt.pem",
+      "privateKey": "key.pem"
+    },
+    "redirectHTTP": {
+      "dev": true,
+      "prod": false
+    }
+  }
+}
