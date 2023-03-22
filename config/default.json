@@ -8,10 +8,6 @@
     "credentials": {
       "certificate": "crt.pem",
       "privateKey": "key.pem"
-    },
-    "redirectHTTP": {
-      "dev": true,
-      "prod": false
     }
   }
 }
