@@ -55,7 +55,7 @@ const UserSchema = new Schema<IUser>(
     registerDate: {
       type: Date,
       required: true,
-      default: Date.now()
+      default: new Date()
     },
     username: {
       type: String,
