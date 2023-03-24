@@ -17,14 +17,12 @@ export default class PasswordChecker {
   public constructor(opts: IOptions) {
     const conditions = opts.mustContain;
 
-    let formString = '^(';
-    formString += `[a-z]${conditions.lowerCase ? '+' : '*'}`;
-    formString += `[A-Z]${conditions.upperCase ? '+' : '*'}`;
-    formString += `\\d${conditions.number ? '+' : '*'}`;
-    formString += `[\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\-\\_\\=\\+\\\\\\|\\'\\"\\;\\:\\>\\<\\,\\.\\?\\\`\\~\\/]${
-      conditions.special ? '+' : '*'
-    }`;
-    formString += `){${opts.minLength},${opts.maxLength ? ' ' + opts.maxLength : ''}}}`;
+    let formString = '^';
+    formString += conditions.lowerCase ? '(?=.*[a-z])' : '';
+    formString += conditions.upperCase ? '(?=.*[A-Z])' : '';
+    formString += conditions.number ? '(?=.*\\d)' : '';
+    formString += conditions.special ? '(?=.*[!@#$&*\\(\\)\\-\\+])' : '';
+    formString += `.{${opts.minLength},${opts.maxLength}}$`;
 
     this.form = new RegExp(formString);
     if (MODE === 'DEVELOPMENT') {

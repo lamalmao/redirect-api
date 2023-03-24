@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
+import config from 'config';
 
 export const PROCESS_DIR = process.cwd();
 
@@ -14,10 +15,10 @@ export const MODE: 'DEVELOPMENT' | 'PRODUCTION' =
   process.env['MODE'] === 'PRODUCTION' ? process.env['MODE'] : 'DEVELOPMENT';
 
 const JWT_KEY_FILE = 'jwt_key.txt';
-const JWT_KEY_PATH = path.join(PROCESS_DIR, '');
+const JWT_KEY_PATH = path.join(PROCESS_DIR, JWT_KEY_FILE);
 
 export const JWT_KEY: string = (function () {
-  if (fs.existsSync(path.join(PROCESS_DIR, JWT_KEY_FILE))) {
+  if (fs.existsSync(JWT_KEY_PATH)) {
     console.log('JWT key loaded');
     return fs.readFileSync(JWT_KEY_PATH).toString();
   } else {
@@ -27,3 +28,16 @@ export const JWT_KEY: string = (function () {
     return key;
   }
 })();
+
+export const BOT_API_KEY: string = config.get('botApiKey');
+export const BOT_NAME: string = config.get('botName');
+
+const host: {
+  hostname: string;
+  port: {
+    dev: number;
+    prod: number;
+  };
+} = config.get('host');
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+export const HOST_LINK: string = `https://${host.hostname}`;

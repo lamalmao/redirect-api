@@ -1,26 +1,11 @@
-import { pinoHttp } from 'pino-http';
-import { pino } from 'pino';
-import path from 'path';
-import { MODE, PROCESS_DIR } from './settings.js';
+import winston from 'winston';
 
-const transport = pino.transport({
-  targets: [
-    {
-      target: path.join(PROCESS_DIR, 'logs', 'story.dev.log'),
-      level: 'debug',
-      options: {},
-    },
-    {
-      target: path.join(PROCESS_DIR, 'logs', 'errors.log'),
-      level: 'error',
-      options: {},
-    },
-  ],
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.errors(),
+  defaultMeta: {
+    service: 'api'
+  },
+  transports: [new winston.transports.File({ filename: 'errors.log' })]
 });
-
-const logger = pinoHttp({
-  transport: transport,
-  quietReqLogger: MODE === 'PRODUCTION',
-});
-
 export default logger;

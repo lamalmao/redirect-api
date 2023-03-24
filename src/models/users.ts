@@ -12,6 +12,9 @@ interface IUser {
     hash: string;
     salt: string;
   };
+
+  setPassword(password: string): void;
+  comparePassword(password: string): boolean;
 }
 
 const userPasswordChecker = new PasswordChecker({
@@ -74,8 +77,8 @@ const UserSchema = new Schema<IUser>(
       },
       salt: {
         type: String
-      },
-      required: true
+      }
+      // required: true
     }
   },
   {

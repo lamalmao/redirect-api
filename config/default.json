@@ -4,10 +4,17 @@
     "port": {
       "dev": 80,
       "prod": 443
-    },
-    "credentials": {
-      "certificate": "crt.pem",
-      "privateKey": "key.pem"
+    }
+  },
+  "botName": "telegram_bot",
+  "botApiKey": "00000000:API_KEY",
+  "dbAuth": "mongodb://user:pwd@host/db",
+  "mail": {
+    "host": "smtp.host.email",
+    "port": 465,
+    "auth": {
+      "user": "user@mail.org",
+      "pass": "someAwesomePassword"
     }
   }
 }
