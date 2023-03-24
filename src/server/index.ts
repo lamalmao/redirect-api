@@ -43,13 +43,13 @@ if (MODE === 'DEVELOPMENT') {
     const then = Date.now();
     const connectionId = crypto.randomUUID();
     res.locals['connectionId'] = connectionId;
-    debugLoggerConnections.set(connectionId, [req.url, req.method, req.ip, then]);
+    global.debugLoggerConnections.set(connectionId, [req.url, req.method, req.ip, then]);
     next();
   });
 
-  debugLoggerEventEmitter.on('connectionClosed', (connectionId: string) => {
+  global.debugLoggerEventEmitter.on('connectionClosed', (connectionId: string) => {
     try {
-      const connectionDebugData = debugLoggerConnections.get(connectionId);
+      const connectionDebugData = global.debugLoggerConnections.get(connectionId);
       if (!connectionDebugData) {
         return;
       }
@@ -59,7 +59,7 @@ if (MODE === 'DEVELOPMENT') {
           Date.now() - connectionDebugData[3]
         }ms`
       );
-      debugLoggerConnections.delete(connectionId);
+      global.debugLoggerConnections.delete(connectionId);
     } catch (e) {}
   });
 }
@@ -77,7 +77,9 @@ app.use((_, res) => {
   res.statusCode = res.locals.answer.code;
   res.json(res.locals.answer.body);
 
-  debugLoggerEventEmitter?.emit('connectionClosed', res.locals.connectionId);
+  if (global.debugLoggerEventEmitter) {
+    global.debugLoggerEventEmitter.emit('connectionClosed', res.locals.connectionId);
+  }
 });
 
 export default server;

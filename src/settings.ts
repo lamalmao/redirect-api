@@ -9,7 +9,9 @@ export const PROCESS_DIR = process.cwd();
 const CONFIG_DIR = path.join(PROCESS_DIR, 'config');
 process.env['NODE_CONFIG_DIR'] = CONFIG_DIR;
 
-dotenv.config();
+dotenv.config({
+  path: path.join(PROCESS_DIR, 'properties.env')
+});
 
 export const MODE: 'DEVELOPMENT' | 'PRODUCTION' =
   process.env['MODE'] === 'PRODUCTION' ? process.env['MODE'] : 'DEVELOPMENT';
