@@ -27,14 +27,18 @@ export default abstract class AuthMechanism {
   }
 
   public static verify(token: string): Types.ObjectId | null {
-    const check = jsonwebtoken.verify(token, this.key, {
-      algorithms: [this.algorithm]
-    });
+    try {
+      const check = jsonwebtoken.verify(token, this.key, {
+        algorithms: [this.algorithm]
+      });
 
-    if (typeof check === 'string') {
+      if (typeof check === 'string') {
+        return null;
+      }
+
+      return check['userId'] as Types.ObjectId;
+    } catch (e) {
       return null;
     }
-
-    return check['userId'] as Types.ObjectId;
   }
 }

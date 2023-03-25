@@ -43,7 +43,7 @@ const UserCodeSchema = new Schema<IUserCode>(
     activeUntil: {
       type: Date,
       required: true,
-      default: new Date(Date.now() + CODE_LIFETIME)
+      default: () => Date.now() + CODE_LIFETIME
     },
     active: {
       type: Boolean,
@@ -53,7 +53,7 @@ const UserCodeSchema = new Schema<IUserCode>(
     created: {
       type: Date,
       required: true,
-      default: new Date()
+      default: Date.now
     },
     appointment: {
       type: String,

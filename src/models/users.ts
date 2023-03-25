@@ -1,8 +1,9 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import PasswordChecker from '../modules/password-strength-checker.js';
 import crypto from 'crypto';
 
-interface IUser {
+export interface IUser {
+  _id?: Types.ObjectId;
   email?: string;
   telegramId?: number;
   status: 'activated' | 'pending' | 'blocked';
@@ -12,6 +13,7 @@ interface IUser {
     hash: string;
     salt: string;
   };
+  role: 'admin' | 'common';
 
   setPassword(password: string): void;
   comparePassword(password: string): boolean;
@@ -58,7 +60,7 @@ const UserSchema = new Schema<IUser>(
     registerDate: {
       type: Date,
       required: true,
-      default: new Date()
+      default: Date.now
     },
     username: {
       type: String,
@@ -79,6 +81,15 @@ const UserSchema = new Schema<IUser>(
         type: String
       }
       // required: true
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: {
+        values: ['admin', 'common'],
+        message: 'Unknown role'
+      },
+      default: 'common'
     }
   },
   {

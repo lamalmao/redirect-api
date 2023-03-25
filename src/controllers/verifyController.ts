@@ -27,7 +27,7 @@ export async function verifyController(
   });
 
   if (!code) {
-    res.locals.answer.code = 401;
+    res.statusCode = 401;
     res.locals.answer.body = {
       success: false,
       message: 'Code is not valid'
@@ -38,7 +38,7 @@ export async function verifyController(
 
   const result = await code.activate();
   if (!result) {
-    res.locals.answer.code = 401;
+    res.statusCode = 401;
     res.locals.answer.body = {
       success: false,
       message: 'Activation went wrong'
@@ -48,7 +48,7 @@ export async function verifyController(
   }
 
   const token = AuthMechanism.sign(code.user);
-  res.locals.answer.code = 200;
+  res.statusCode = 200;
   res.locals.answer.body = {
     success: true,
     token

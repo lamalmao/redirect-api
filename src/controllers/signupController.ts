@@ -25,9 +25,9 @@ export default async function signupController(
 ) {
   const data = req.body;
   if (!data.telegramAuth && !data.email) {
+    res.statusCode = 401;
     res.locals.answer.body = {
       success: false,
-      code: 401,
       message: 'No mail or telegram provided'
     };
     next();
@@ -38,8 +38,8 @@ export default async function signupController(
     username: data.username
   });
   if (check) {
+    res.statusCode = 401;
     res.locals.answer.body = {
-      code: 401,
       success: false,
       message: 'User already exists'
     };
@@ -55,8 +55,8 @@ export default async function signupController(
   try {
     user.setPassword(data.password);
   } catch (e) {
+    res.statusCode = 401;
     res.locals.answer.body = {
-      code: 401,
       success: false,
       message: 'Password is not valid'
     };
@@ -68,8 +68,8 @@ export default async function signupController(
   try {
     await user.save();
   } catch (e) {
+    res.statusCode = 500;
     res.locals.answer.body = {
-      code: 500,
       success: false,
       message: e
     };
@@ -92,8 +92,8 @@ export default async function signupController(
     });
   }
 
+  res.statusCode = 200;
   res.locals.answer.body = {
-    code: 200,
     success: true,
     telegramVerificationURL
   };

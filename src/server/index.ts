@@ -1,15 +1,16 @@
-import express from 'express';
+import express, { urlencoded } from 'express';
 import https from 'https';
 import fs from 'fs';
 import { MODE, PROCESS_DIR } from '../settings.js';
 import path from 'path';
 import mainRouter from '../routers/mainRouter.js';
 import logger from '../logger.js';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { EventEmitter } from 'events';
+import getLinkController from '../controllers/linksControllers/getLinkController.js';
 
 const app = express();
+const ICON = path.join(PROCESS_DIR, 'favicon.ico');
 
 const server = https.createServer(
   {
@@ -24,8 +25,13 @@ app.use(
     credentials: true
   })
 );
+app.get('/favicon.ico', (_, res) => res.sendFile(ICON));
 app.use(express.json());
-app.use(cookieParser());
+app.use(
+  urlencoded({
+    extended: true
+  })
+);
 
 app.on('error', (err) => {
   logger.error(err);
@@ -72,10 +78,12 @@ app.use((_, res, next) => {
 
   next();
 });
+app.get('/s', getLinkController);
 app.use('/api', mainRouter);
 app.use((_, res) => {
-  res.statusCode = res.locals.answer.code;
-  res.json(res.locals.answer.body);
+  if (!res.locals.sent) {
+    res.json(res.locals.answer.body);
+  }
 
   if (global.debugLoggerEventEmitter) {
     global.debugLoggerEventEmitter.emit('connectionClosed', res.locals.connectionId);
