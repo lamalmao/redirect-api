@@ -43,7 +43,7 @@ const LinkSchema = new Schema<ILink>(
       type: String,
       required: true,
       unique: true,
-      default: randomBytes(6).toString('base64url')
+      default: () => randomBytes(6).toString('base64url')
     },
     createdBy: {
       type: SchemaTypes.ObjectId,
